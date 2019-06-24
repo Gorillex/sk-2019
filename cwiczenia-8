@@ -9,8 +9,8 @@
 2. Dodaje adresy ip 
  DLA PC0 : 
  - Nadanie adresów 
-  ip addr add 172.22.160.1/23 dev enp0s8
-  ip addr add 172.22.128.1/19 dev enp0s9
+  ip addr add 172.22.128.1/23 dev enp0s8
+  ip addr add 172.22.160.1/19 dev enp0s9
  - Postawienie interfejsów
   ip link set enp0s3 up
   ip link set enp0s8 up
