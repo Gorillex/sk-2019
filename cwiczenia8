@@ -1,0 +1,40 @@
+1.  Podział sieci na 2 podsieci i ustalenie maski
+ IP BAZOWE : 172.22.128.0
+    LAN1 172.22.128.0/23 - dla netmaski /23 dostepnych jest 510 adresów więc wystarczy dla naszych 500
+    LAN2 172.22.160.0/19 - dla netmaski /19 dostępnych jest 8190 adresów więc pula 8190 adresów wystarcza
+     !!!  (pula kolejnych dostępnych adresów przy netmasce /19 zaczyna się właśnie od .160)  !!!
+    
+   
+  
+ 
+2. Dodaje adresy ip 
+ DLA PC0 : 
+ - Nadanie adresów 
+  ip addr add 172.22.160.1/23 dev enp0s8
+  ip addr add 172.22.128.1/19 dev enp0s9
+ - Postawienie interfejsów
+  ip link set enp0s3 up
+  ip link set enp0s8 up
+  ip link set enp0s9 up
+  
+  
+
+3. Ustalam routing
+ Dla PC1
+    up ip route add default via 172.22.128.1
+ Dla PC2
+    up ip route add default via 172.22.160.1
+    
+    
+4. Włączam forwardowanie pakietów na PC0 komendą : 
+    echo 1 > /proc/sys/net/ipv4/ip_forward
+    Włączene IP forwardigu umożliwia komunikację PC1 <-> PC2
+  
+5. Dodanie reguły MASQUERADE
+    iptables -t nat -A POSTROUTING -s 172.22.128.0/23 -o enp0s3 -j MASQUERADE
+    iptables -t nat -A POSTROUTING -s 172.22.160.0/19 -o enp0s3 -j MASQUERADE
+   Reguła MASQUERADE umożliwia dostęp do internetu dla PC1 oraz PC2
+  
+7. Dodanie adresów dns do PC1 i PC2
+  
+  nameserver 1.1.1.1
